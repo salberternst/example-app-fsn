@@ -1,0 +1,68 @@
+upstreamConfig:
+  upstreams:
+    - id: websocket
+      flushInterval: 1s
+      path: ^/(api/ws/plugins/.*)$
+      rewriteTarget: /$1
+      passHostHeader: false
+      proxyWebSockets: true
+      uri: ${DATASPACE_URL}
+    - id: auth
+      path: ^/(api/auth/login)$
+      rewriteTarget: /$1
+      passHostHeader: false
+      uri: ${DATASPACE_URL}
+    - id: history
+      path: ^/(api/history/.*)$
+      rewriteTarget: /$1
+      passHostHeader: false
+      uri: ${DATASPACE_URL}
+    - id: registry
+      path: ^/(api/registry/.*)$
+      rewriteTarget: /$1
+      passHostHeader: false
+      uri: ${DATASPACE_URL}
+    - id: backend
+      path: ^/api/backend/(.*)$
+      rewriteTarget: /$1
+      passHostHeader: false
+      uri: http://backend:3000
+    - id: frontend
+      path: /
+      uri: http://frontend:3000
+server:
+  BindAddress: 0.0.0.0:4180
+injectResponseHeaders:
+- name: X-Auth-Request-Access-Token
+  values:
+  - claim: access_token
+injectRequestHeaders:
+- name: X-Forwarded-Groups
+  values:
+  - claim: groups
+- name: X-Access-Token
+  values:
+  - claim: access_token
+- name: X-Forwarded-User
+  values:
+  - claim: user
+- name: X-Forwarded-Email
+  values:
+  - claim: email
+- name: X-Forwarded-Preferred-Username
+  values:
+  - claim: preferred_username
+providers:
+- provider: keycloak-oidc
+  id: keycloak
+  clientID: "${CLIENT_ID}"
+  clientSecret: "${CLIENT_SECRET}"
+  scope: openid profile email
+  oidcConfig:
+    insecureAllowUnverifiedEmail: false
+    issuerURL: "${ISSUER_URL}"
+    emailClaim: email
+    groupsClaim: groups
+    userIDClaim: sub
+    audienceClaims: 
+      - aud

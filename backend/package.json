@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "Small example backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "lint": "prettier --write '**/*.js' && standard --fix '**/*.js'"
+  },
+  "author": "Sebastian Alberternst <sebastian.alberternst@dfki.de>",
+  "dependencies": {
+    "env-var": "^7.4.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "standard": "^17.1.0"
+  }
+}
